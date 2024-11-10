@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | VitalisLink</title>
+    <link rel="shortcut icon" href="../static/Images/logo(1).png" type="image/x-icon">
+    <link rel="stylesheet" href="../static/CSS/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <h1 class="title">VitalisLink</h1>
+        <nav>
+            <ul class="menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/login">Sign In/Sign Up</a></li>
+            </ul>        
+        </nav>
+    </header>
+    
+    <main>
+        <section class="login-section">
+            <div class="login-form">
+                <h2>Sign Up</h2>
+                <form method="POST" action="/register"> <!-- Update action to point to the register route -->
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" name="confirm_password" required>
+                    </div>
+                    
+                    <button type="submit">Sign Up</button>
+                    <div class="more">
+                        <p class="dnt">Already have an account?</p><br>
+                        <button class="signin-btn" onclick="window.location.href='/login'">Sign In</button><br>
+                    </div>
+                    <div class="icon">
+                        <a href="#"><ion-icon name="logo-google"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-linkedin"></ion-icon></a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+</body>
+</html>

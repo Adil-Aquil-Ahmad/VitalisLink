@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitalisLink | Homepage</title>
+    <link rel="stylesheet" href="../static/CSS/Style.css">
+</head>
+<body>
+    <header> 
+        <h1 class="title">VitalisLink</h1>
+        <nav>
+            <ul class="menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/login">Login/Register</a></li>
+            </ul>        
+        </nav>
+    </header>
+
+    <main>
+        <section class="slideshow-container">
+            <img src="../static/Images/Blood-Donation-1.jpg" class="slideshow-image" alt="Blood Donation Image 1">
+            <img src="../static/Images/Blood-Donation-2.jpg" class="slideshow-image" alt="Blood Donation Image 2">
+            <img src="../static/Images/Blood-Donation-3.jpg" class="slideshow-image" alt="Blood Donation Image 3">
+        </section>
+
+        <div class="nav">
+            <button class="prev" aria-label="Previous slide" onclick="goPrev()">&#10094;</button>
+            <button class="next" aria-label="Next slide" onclick="goNext()">&#10095;</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 VitalisLink. All Rights Reserved.</p>
+    </footer>
+
+    <script src="../static/JS/Slider.js"></script>
+</body>
+</html>

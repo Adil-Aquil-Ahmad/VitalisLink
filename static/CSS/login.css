@@ -1,0 +1,160 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    background-image: url("../Images/Picture1.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1vw;
+    background-color: rgba(220, 20, 60, 0.75);
+    transition: background-color 0.5s ease-in-out;
+  }
+  
+  .title {
+    color: #fff;
+    font-size: 1.5em;
+  }
+  
+  .menu {
+    display: flex;
+    gap: 1em;
+    list-style-type: none;
+  }
+  
+  .menu li a {
+    color: #fff;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  
+  .menu li a:hover,
+  .menu li a:focus {
+    background-color: #951a1a;
+    border-radius: 5px;
+  }
+  
+  .login-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+  }
+  
+  .login-form {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    width: 30%;
+  }
+  
+  .login-form h2 {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    color: #951a1a;
+  }
+  
+  .input-group {
+    margin-bottom: 1.5em;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 0.8em;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 1em;
+    background-color: #951a1a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #dc143c;
+  }
+  
+  .more {
+    text-align: center;
+    margin-top: 1em;
+  }
+  
+  .dnt {
+    font-size: 0.9em;
+  }
+  
+  .sgnup a {
+    color: #951a1a;
+    text-decoration: none;
+  }
+  
+  .sgnup a:hover {
+    text-decoration: underline;
+  }
+  
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em; 
+    margin-top: 1.5em;
+}
+
+.icon a {
+    color: #333;
+    font-size: 1.5em;
+    transition: color 0.3s ease-in-out;
+}
+
+.icon a:hover {
+    color: #dc143c;
+}
+
+  .signup-btn, .signin-btn {
+    background-color: #dc143c; 
+    color: #fff;
+    border: none;
+    font-size: 1em;
+    padding: 0.5em 1.5em;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 1em;
+}
+
+.signup-btn:hover, .signin-btn:hover {
+    background-color: #951a1a; 
+}
+
+.signup-btn:focus, .signin-btn:focus {
+    outline: none;
+}

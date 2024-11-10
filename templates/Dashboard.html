@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitalisLink | Dashboard</title>
+    <link rel="stylesheet" href="../static/CSS/Style.css">
+    <link rel="stylesheet" href="../static/CSS/dashboard.css">
+</head>
+<body>
+    <header>
+        <h1 class="title">VitalisLink</h1>
+        <nav>
+            <ul class="menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/login">Login/Register</a></li>
+            </ul>        
+        </nav>
+    </header>
+
+    <main>
+        <section class="dashboard-section">
+            <h2>Blood Donation Records</h2>
+
+            <div class="sort-container">
+                <label for="sortOption">Sort By: </label>
+                <select id="sortOption" onchange="sortTable()">
+                    <option value="bloodGroup">Blood Group</option>
+                    <option value="location">Location</option>
+                </select>
+
+                <label for="bloodGroupFilter">Filter by Blood Group: </label>
+                <select id="bloodGroupFilter" onchange="filterBloodGroup()">
+                    <option value="">All</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+
+                <label for="locationFilter">Filter by Location: </label>
+                <select id="locationFilter" onchange="filterLocation()">
+                    <option value="">All</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Kolkata">Kolkata</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Ahmedabad">Ahmedabad</option>
+                    <option value="UP">Uttar Pradesh</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <!-- will add more states and cities as needed-->
+                </select>
+            </div>
+
+            <!-- Table -->
+            <table id="donationTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Blood Group</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for person in people %}
+                    <tr class="person-row" data-blood-group="{{ person._Person__blood_group }}" data-location="{{ person.location }}">
+                        <td>{{ person.name }}</td>
+                        <td>{{ person.age }}</td>
+                        <td>{{ person._Person__blood_group }}</td>
+                        <td>{{ person.location }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 VitalisLink. All Rights Reserved.</p>
+    </footer>
+
+    <script src="../static/JS/dashboard.js"></script>
+</body>
+</html>

@@ -38,7 +38,7 @@ class Person:
 
     @classmethod
     def instantiate_from_csv(cls):
-
+        cls.all.clear()
         with open('Blood_Group_Database.csv', 'r') as f:
             reader = csv.DictReader(f)
             people = list(reader)
@@ -61,9 +61,9 @@ class Person:
 
         with open('Blood_Group_Database.csv', 'a', newline="") as f:
             writer = csv.writer(f)
-            # if Person("Adil", 19, "A+", "placeholder") not in Person.all:
             writer.writerow([a, b, c ,d])
 
-Person.instantiate_from_user()
+
+# Person.instantiate_from_user()
 Person.instantiate_from_csv()
 print(Person.all)
