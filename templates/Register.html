@@ -25,7 +25,19 @@
         <section class="login-section">
             <div class="login-form">
                 <h2>Sign Up</h2>
-                <form method="POST" action="/register"> <!-- Update action to point to the register route -->
+                
+                <!-- Flash messages block -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <p class="{{ category }}">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="/register">
                     <div class="input-group">
                         <label for="username">Username</label>
                         <input type="text" name="username" required>

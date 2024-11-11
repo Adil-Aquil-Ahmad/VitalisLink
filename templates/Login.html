@@ -25,6 +25,18 @@
         <section class="login-section">
             <div class="login-form">
                 <h2>Sign In</h2>
+                
+                <!-- Flash messages block -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <p class="{{ category }}">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                
                 <form method="POST" action="/login"> 
                     <div class="input-group">
                         <label for="username">Username</label>
@@ -47,16 +59,6 @@
                         <a href="#"><ion-icon name="logo-linkedin"></ion-icon></a>
                     </div>
                 </form>
-
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <ul>
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                {% endwith %}
             </div>
         </section>
     </main>
