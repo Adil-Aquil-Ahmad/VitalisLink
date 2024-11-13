@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation | VitalisLink</title>
+    <link rel="stylesheet" href="../CSS/donor_booking.css">
+    <link rel="stylesheet" href="../CSS/user.css">
+</head>
+<body>
+    <header>
+        <img src="../Images/VITALISLINK LOGO LIGHT2.png" alt="" style="opacity: 100%; border-radius: 5px;">
+        <h1 class="title">Booking Confirmation</h1>
+        <nav>
+            <ul class="menu">
+                <li><a href="/">Home</a></li>
+                <li>
+                    
+                        <a href="/login" onclick="alert('Please log in to register as a donor');">Donor Registration</a>
+                    
+                </li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/about">About</a></li>
+                <li>
+                    
+                    <a href="/login">Login</a>
+                    
+            </li>   
+            </ul>        
+        </nav>
+    </header>
+
+    <main class="booking-section">
+        <div class="booking-details-container">
+            <div class="qr-code">
+                <img src="../QR_Codes/Arifa_Aquil_QR.png" alt="QR Code" style="width: 270px; height: 270px;">
+            </div>
+
+            <div class="booking-info">
+                <h2>Donor Booking Details</h2>
+                <p><strong>Full Name:</strong> Arifa  Aquil</p>
+                <p><strong>Age:</strong> 21</p>
+                <p><strong>Blood Group:</strong> B+</p>
+                <p><strong>Address:</strong> 72/231 street no.1 central lane, New Delhi, Delhi - 110025</p>
+                <p><strong>Time Slot:</strong> 2:00 PM - 3:00 PM</p>
+                <p><strong>Booking ID:</strong> P301261139</p>
+                <p><strong>Date:</strong> 2025-02-12</p>
+                <p><strong>Status:</strong> Confirmed</p>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button onclick="window.print()">Print</button>
+            <button onclick="saveAsPDF()">Save as PDF</button>
+        </div>
+    </main>
+
+    <script>
+        function saveAsPDF() {
+            window.print();
+        }
+    </script>
+
+    <script src="../JS/user.js"></script>
+
+</body>
+</html>

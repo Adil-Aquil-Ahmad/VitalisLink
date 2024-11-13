@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitalisLink | About</title>
-    <link rel="shortcut icon" href="../static/Images/VITALISLINK LOGO LIGHT.png" type="image/x-icon">
-    <link rel="stylesheet" href="../static/CSS/Style.css">
+    <title>My Bookings | VitalisLink</title>
+    <link rel="stylesheet" href="../static/CSS/my_bookings.css">
     <link rel="stylesheet" href="../static/CSS/user.css">
 </head>
 <body>
     <header>
         <img src="../static/Images/VITALISLINK LOGO LIGHT2.png" alt="" style="opacity: 100%; border-radius: 5px;">
+        <h1>My Bookings</h1>
         <nav>
             <ul class="menu">
                 <li><a href="/">Home</a></li>
@@ -43,27 +43,30 @@
         </nav>
     </header>
 
-    <main>
-        <section class="about-section">
-            <h2>About Us</h2>
-            <p>At VitalisLink, our mission is to connect communities through the power of blood donation. We aim to create a platform that makes it easier for individuals to donate blood and for hospitals to manage their blood supplies efficiently. By bringing people together, we can save lives and make the world a healthier place.</p>
-            
-            <h3>Our Goals</h3>
-            <p>To make blood donation more accessible and to bridge connections between blood donation camps nationwide, fostering a culture of regular and impactful donations.</p>
-
-            <h3>Why We Do It</h3>
-            <p>Blood donation is one of the most meaningful ways to save lives. Our platform is designed to connect donors, hospitals, and medical professionals in a streamlined process that makes it easier for individuals to contribute and for healthcare providers to access the blood supplies they need. With VitalisLink, we aim to create a seamless, user-friendly experience for everyone involved.</p>
-
-            <h3>Our Vision</h3>
-            <p>A world where no one ever faces difficulty in accessing the blood they need for critical treatments.</p>
-        </section>
+    <main class="bookings-section">
+        <h2>Your Bookings</h2>
+        <div class="booking-list">
+            {% if bookings %}
+                {% for booking in bookings %}
+                    <div class="booking-item">
+                        <p><strong>Booking ID:</strong> {{ booking['Booking ID'] }}</p>
+                        <p><strong>Date:</strong> {{ booking['Donation Date'] }}</p>
+                        <p><strong>Time Slot:</strong> {{ booking['Preferred Slot'] }}</p>
+                        <p><strong>Status:</strong> {{ booking['Status'] }}</p>
+                        <button onclick="window.location.href='/static/Bookings/{{ booking['Booking ID'] }}.html'">View Ticket</button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No bookings found.</p>
+            {% endif %}
+        </div>
     </main>
 
     <footer>
         <p>&copy; 2024 VitalisLink. All Rights Reserved.</p>
     </footer>
 
-    <script src="../static/JS/Slider.js"></script>
     <script src="../static/JS/user.js"></script>
+    
 </body>
 </html>

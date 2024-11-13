@@ -1,25 +1,32 @@
-const slides = document.querySelectorAll(".slideshow-image");
-let counter = 0;
+const slides = document.querySelectorAll('.slideshow-image');
+const donateButton = document.getElementById('donateButton');
+let currentSlide = 0;
 
-const updateSlides = () => {
-    slides.forEach((slide, index) => {
-        slide.classList.remove("active");
-        if (index === counter) {
-            slide.classList.add("active");
-        }
+function showSlide(index) {
+    slides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (i !== 3) donateButton.classList.remove('show');
+        if (i !== 2) donateButton.classList.remove('show2');
     });
-};
 
-const goNext = () => {
-    counter = (counter + 1) % slides.length;
-    updateSlides();
-};
+    slides[index].classList.add('active');
 
-const goPrev = () => {
-    counter = (counter - 1 + slides.length) % slides.length;
-    updateSlides();
-};
+    if (index === 3) {
+        donateButton.classList.add('show');
+    }
+    if (index === 2) {
+        donateButton.classList.add('show2');
+    }
+}
 
-setInterval(goNext, 5000);
+function goPrev() {
+    currentSlide = (currentSlide === 0) ? slides.length - 1 : currentSlide - 1;
+    showSlide(currentSlide);
+}
 
-updateSlides();
+function goNext() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+}
+
+showSlide(currentSlide);

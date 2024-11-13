@@ -101,4 +101,61 @@ footer {
   color: white;
 }
 
-  
+.donate-btn {
+  position: absolute;
+  top: 80%;
+  left: 9%;
+  transform: translate(-50%, -50%);
+  padding: 1em 2em;
+  background-color: #dc143c;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, transform 0.5s;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.donate-btn.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.1);
+  animation: glow 1.5s infinite alternate;
+}
+
+.donate-btn.show2 {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.1);
+  animation: glow 1.5s infinite alternate;
+  left: 49.5%;
+  top: 86%;
+  width: 17%;
+  height: 10%;
+  align-items: center;
+  text-align: center;
+}
+
+.donate-btn:hover {
+  background-color: #951a1a;
+  animation: glow 0.8s infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5),
+                  0 0 25px rgba(220, 20, 60, 0.7),
+                  0 0 35px rgba(220, 20, 60, 0.9);
+  }
+  100% {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+                  0 0 30px rgba(220, 20, 60, 0.9),
+                  0 0 40px rgba(220, 20, 60, 1);
+  }
+
+}

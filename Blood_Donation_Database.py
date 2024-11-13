@@ -39,7 +39,7 @@ class Person:
     @classmethod
     def instantiate_from_csv(cls):
         cls.all.clear()
-        with open('Blood_Group_Database.csv', 'r') as f:
+        with open('Blood_Collection_Database.csv', 'r') as f:
             reader = csv.DictReader(f)
             people = list(reader)
             
@@ -59,11 +59,11 @@ class Person:
         c = input("Blood Group: ")
         d = input("Location: ")
 
-        with open('Blood_Group_Database.csv', 'a', newline="") as f:
+        with open('Blood_Collection_Database.csv', 'a', newline="") as f:
             writer = csv.writer(f)
             writer.writerow([a, b, c ,d])
 
 
 # Person.instantiate_from_user()
 Person.instantiate_from_csv()
-print(Person.all)
+# print(Person.all)

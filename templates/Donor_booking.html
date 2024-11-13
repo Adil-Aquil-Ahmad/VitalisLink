@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation | VitalisLink</title>
+    <link rel="stylesheet" href="../CSS/donor_booking.css">
+    <link rel="stylesheet" href="../CSS/user.css">
+</head>
+<body>
+    <header>
+        <img src="../Images/VITALISLINK LOGO LIGHT2.png" alt="" style="opacity: 100%; border-radius: 5px;">
+        <h1 class="title">Booking Confirmation</h1>
+        <nav>
+            <ul class="menu">
+                <li><a href="/">Home</a></li>
+                <li>
+                    {% if username %}
+                        <a href="/donor_register">Donor Registration</a>
+                    {% else %}
+                        <a href="/login" onclick="alert('Please log in to register as a donor');">Donor Registration</a>
+                    {% endif %}
+                </li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/about">About</a></li>
+                <li>
+                    {% if username %}
+                        <div class="dropdown">
+                            <button onclick="myFunction()" class="dropbtn">{{username[0]}}</button>
+                            <div id="myDropdown" class="dropdown-content">
+                                <div id="welcome">
+                                    <p>Welcome, {{username}}</p>
+                                </div>
+                                <a href="/my_bookings">My Bookings</a>
+                                <a href="/logout">Logout</a>
+                            </div>
+                          </div>
+                    {% else %}
+                    <a href="/login">Login</a>
+                    {% endif %}
+            </li>   
+            </ul>        
+        </nav>
+    </header>
+
+    <main class="booking-section">
+        <div class="booking-details-container">
+            <div class="qr-code">
+                <img src="../QR_Codes/{{ qr_filename }}" alt="QR Code" style="width: 270px; height: 270px;">
+            </div>
+
+            <div class="booking-info">
+                <h2>Donor Booking Details</h2>
+                <p><strong>Full Name:</strong> {{ first_name }} {{ middle_name }} {{ last_name }}</p>
+                <p><strong>Age:</strong> {{ age }}</p>
+                <p><strong>Blood Group:</strong> {{ blood_group }}</p>
+                <p><strong>Address:</strong> {{ address }}, {{ city }}, {{ state }} - {{ pin_code }}</p>
+                <p><strong>Time Slot:</strong> {{ slot }}</p>
+                <p><strong>Booking ID:</strong> {{ booking_id }}</p>
+                <p><strong>Date:</strong> {{ donation_date }}</p>
+                <p><strong>Status:</strong> {{ status }}</p>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button onclick="window.print()">Print</button>
+            <button onclick="saveAsPDF()">Save as PDF</button>
+        </div>
+    </main>
+
+    <script>
+        function saveAsPDF() {
+            window.print();
+        }
+    </script>
+
+    <script src="../JS/user.js"></script>
+
+</body>
+</html>
