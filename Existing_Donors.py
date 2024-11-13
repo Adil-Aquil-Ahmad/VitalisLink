@@ -1,7 +1,7 @@
 import csv
 
 
-class Person:
+class Donors:
         
     all = []
 
@@ -17,7 +17,7 @@ class Person:
         assert blood_group in Blood_Groups, f"{blood_group} is not a valid Blood Group"
         assert age>=18 and age<=60, f"{age}, is not in the permissible age group"
 
-        Person.all.append(self)
+        Donors.all.append(self)
     
 
     def __str__(self) -> str:
@@ -43,12 +43,12 @@ class Person:
             reader = csv.DictReader(f)
             people = list(reader)
             
-            for person in people:
-                Person(
-                    name = person.get('name'),
-                    age = int(person.get('age').rstrip()),
-                    blood_group = person.get('blood_group').rstrip(),
-                    location = person.get('location')
+            for donors in people:
+                Donors(
+                    name = donors.get('name'),
+                    age = int(donors.get('age').rstrip()),
+                    blood_group = donors.get('blood_group').rstrip(),
+                    location = donors.get('location')
                 )
 
 
@@ -64,6 +64,6 @@ class Person:
             writer.writerow([a, b, c ,d])
 
 
-# Person.instantiate_from_user()
-Person.instantiate_from_csv()
-# print(Person.all)
+# Donors.instantiate_from_user()
+Donors.instantiate_from_csv()
+# print(Donors.all)

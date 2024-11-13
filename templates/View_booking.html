@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bookings | VitalisLink</title>
-    <link rel="stylesheet" href="../static/CSS/my_bookings.css">
+    <title>Booking Confirmation | VitalisLink</title>
+    <link rel="stylesheet" href="../static/CSS/donor_booking.css">
     <link rel="stylesheet" href="../static/CSS/user.css">
 </head>
 <body>
     <header>
         <img src="../static/Images/VITALISLINK LOGO LIGHT2.png" alt="" style="opacity: 100%; border-radius: 5px;">
-        <h1>My Bookings</h1>
+        <h1 class="title">Booking Confirmation</h1>
         <nav>
             <ul class="menu">
                 <li><a href="/">Home</a></li>
@@ -43,30 +43,37 @@
         </nav>
     </header>
 
-    <main class="bookings-section">
-        <h2>Your Bookings</h2>
-        <div class="booking-list">
-            {% if bookings %}
-                {% for booking in bookings %}
-                    <div class="booking-item">
-                        <p><strong>Booking ID:</strong> {{ booking['Booking ID'] }}</p>
-                        <p><strong>Date:</strong> {{ booking['Donation Date'] }}</p>
-                        <p><strong>Time Slot:</strong> {{ booking['Preferred Slot'] }}</p>
-                        <p><strong>Status:</strong> {{ booking['Status'] }}</p>
-                        <button onclick="window.location.href='/view_booking/{{ booking['Booking ID'] }}'">View Ticket</button>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>No bookings found.</p>
-            {% endif %}
+    <main class="booking-section">
+        <div class="booking-details-container">
+            <div class="qr-code">
+                <img src="../static/QR_Codes/{{ booking['QR File Name'] }}" alt="QR Code" style="width: 270px; height: 270px;">
+            </div>
+            <div class="booking-info">
+                <h2>Donor Booking Details</h2>
+                <p><strong>Full Name:</strong> {{ booking['First Name'] }} {{ booking['Middle Name'] }} {{ booking['Last Name'] }}</p>
+                <p><strong>Age:</strong> {{ booking['Age'] }}</p>
+                <p><strong>Blood Group:</strong> {{ booking['Blood Group'] }}</p>
+                <p><strong>Address:</strong> {{ booking['Address'] }}, {{ booking['City'] }}, {{ booking['State'] }} - {{ booking['Pin Code'] }}</p>
+                <p><strong>Time Slot:</strong> {{ booking['Preferred Slot'] }}</p>
+                <p><strong>Booking ID:</strong> {{ booking['Booking ID'] }}</p>
+                <p><strong>Date:</strong> {{ booking['Donation Date'] }}</p>
+                <p><strong>Status:</strong> {{ booking['Status'] }}</p>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button onclick="window.print()">Print</button>
+            <button onclick="saveAsPDF()">Save as PDF</button>
         </div>
     </main>
 
-    <footer>
-        <p>&copy; 2024 VitalisLink. All Rights Reserved.</p>
-    </footer>
+    <script>
+        function saveAsPDF() {
+            window.print();
+        }
+    </script>
 
     <script src="../static/JS/user.js"></script>
-    
+
 </body>
 </html>
