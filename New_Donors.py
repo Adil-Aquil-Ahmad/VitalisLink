@@ -66,7 +66,7 @@ def load_booking(booking_id):
 
 def send_email_with_pdf(user_email, booking_id, booking_html):
 
-    base_url = "http://localhost:5000"
+    base_url = "https://vitalis-link-br9rmx4xz-adil-aquil-ahmads-projects.vercel.app"
     
     booking_html = booking_html.replace("../static/", f"{base_url}/static/")
     
