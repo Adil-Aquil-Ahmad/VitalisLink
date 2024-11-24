@@ -34,15 +34,14 @@ function sortTable() {
     var sortOption = document.getElementById("sortOption").value;
 
     rows.sort(function(rowA, rowB) {
-        var cellA = rowA.cells[sortOption === "bloodGroup" ? 2 : 3].innerText; 
-        var cellB = rowB.cells[sortOption === "bloodGroup" ? 2 : 3].innerText;
+        var cellA = rowA.cells[sortOption === "bloodGroup" ? 4 : 6].innerText; 
+        var cellB = rowB.cells[sortOption === "bloodGroup" ? 4 : 6].innerText;
 
-        if (cellA < cellB) return -1;
-        if (cellA > cellB) return 1;
-        return 0;
+        return cellA.localeCompare(cellB);
     });
 
     rows.forEach(function(row) {
         table.appendChild(row);
     });
 }
+

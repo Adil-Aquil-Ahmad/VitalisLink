@@ -32,14 +32,15 @@
                                 <div id="welcome">
                                     <p>Welcome, {{username}}</p>
                                 </div>
+                                <a href="/myprofile">My Profile</a>
                                 <a href="/my_bookings">My Bookings</a>
                                 <a href="/logout">Logout</a>
                             </div>
-                          </div>
+                        </div>
                     {% else %}
                     <a href="/login">Login</a>
                     {% endif %}
-            </li>   
+                </li>   
             </ul>        
         </nav>
     </header>
@@ -77,34 +78,49 @@
                     <option value="Bangalore">Bangalore</option>
                     <option value="Chennai">Chennai</option>
                     <option value="Hyderabad">Hyderabad</option>
-                    <option value="Ahmedabad">Ahmedabad</option>
-                    <option value="UP">Uttar Pradesh</option>
-                    <option value="Bihar">Bihar</option>
-                    <option value="Rajasthan">Rajasthan</option>
-                    <option value="Kerala">Kerala</option>
-                    <option value="Punjab">Punjab</option>
-                    <option value="Gujarat">Gujarat</option>
-                    <!-- will add more states and cities as needed-->
                 </select>
+                
             </div>
 
             <!-- Table -->
             <table id="donationTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
                         <th>Age</th>
                         <th>Blood Group</th>
-                        <th>Location</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Pin Code</th>
+                        <th>Locate (Distance in Km)</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for person in people %}
-                    <tr class="person-row" data-blood-group="{{ person._Person__blood_group }}" data-location="{{ person.location }}">
-                        <td>{{ person.name }}</td>
+                    <tr class="person-row" 
+                        data-blood-group="{{ person._Donors__blood_group }}" 
+                        data-location="{{ person.state }}"
+                        data-latitude="{{ person.latitude }}" 
+                        data-longitude="{{ person.longitude }}">
+                        <td>{{ person.first_name }}</td>
+                        <td>{{ person.middle_name }}</td>
+                        <td>{{ person.last_name }}</td>
                         <td>{{ person.age }}</td>
-                        <td>{{ person._Person__blood_group }}</td>
-                        <td>{{ person.location }}</td>
+                        <td>{{ person._Donors__blood_group }}</td>
+
+                        <!-- Address Column -->
+                        <td>
+                            <a href="https://www.google.com/maps?q={{ person.latitude }},{{ person.longitude }}" target="_blank">
+                                {{ person.address }}
+                            </a>
+                        </td>
+                        <td>{{ person.city }}</td>
+                        <td>{{ person.state }}</td>
+                        <td>{{ person.pin_code }}</td>
+                        <td class="distance-cell">--</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -118,5 +134,69 @@
 
     <script src="../static/JS/dashboard.js"></script>
     <script src="../static/JS/user.js"></script>
+    <script>
+        function haversine(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of the Earth in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // Distance in km
+        }
+
+        function filterNearestDonors() {
+            const userLatitude = {{ latitude }};  // Get user's latitude from session
+            const userLongitude = {{ longitude }};  // Get user's longitude from session
+            const userBloodGroup = "{{ blood_group }}";  // Get user's blood group from session
+
+            const rows = document.querySelectorAll("#donationTable .person-row");
+
+            // Create an array to hold donor data with their distance and blood group
+            let donors = [];
+
+            rows.forEach(function(row) {
+                const donorLatitude = parseFloat(row.getAttribute("data-latitude"));
+                const donorLongitude = parseFloat(row.getAttribute("data-longitude"));
+                const donorBloodGroup = row.getAttribute("data-blood-group");
+
+                // Check if the coordinates are the same, if yes return distance as 0 km
+                let distance = 0;
+                if (userLatitude !== donorLatitude || userLongitude !== donorLongitude) {
+                    distance = haversine(userLatitude, userLongitude, donorLatitude, donorLongitude);
+                }
+
+                donors.push({
+                    row: row,
+                    distance: distance,
+                    bloodGroup: donorBloodGroup
+                });
+            });
+
+            // Sort donors:
+            // 1. Prioritize same blood group as the user
+            // 2. Sort by proximity (distance)
+            donors.sort(function(a, b) {
+                // Prioritize users with matching blood groups
+                if (a.bloodGroup === userBloodGroup && b.bloodGroup !== userBloodGroup) {
+                    return -1;  // a comes before b
+                } else if (a.bloodGroup !== userBloodGroup && b.bloodGroup === userBloodGroup) {
+                    return 1;  // b comes before a
+                } else {
+                    return a.distance - b.distance;  // Sort by proximity if blood groups match
+                }
+            });
+
+            // Reorder the rows based on the sorted array
+            donors.forEach(function(donor) {
+                // Update the 'Locate' column with the distance
+                donor.row.querySelector(".distance-cell").textContent = donor.distance.toFixed(2) + " km";
+
+                document.querySelector("#donationTable tbody").appendChild(donor.row);
+            });
+        }
+        filterNearestDonors()
+    </script>    
 </body>
 </html>

@@ -31,6 +31,7 @@
                                 <div id="welcome">
                                     <p>Welcome, {{username}}</p>
                                 </div>
+                                <a href="/myprofile">My Profile</a>
                                 <a href="/my_bookings">My Bookings</a>
                                 <a href="/logout">Logout</a>
                             </div>
@@ -42,6 +43,16 @@
             </ul>        
         </nav>
     </header>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
     <main class="booking-section">
         <div class="booking-details-container">
@@ -62,8 +73,9 @@
         </div>
 
         <div class="action-buttons">
-            <button onclick="window.print()">Print</button>
-            <button onclick="saveAsPDF()">Save as PDF</button>
+            <button id="button1" onclick="window.print()">Print</button>
+            <button id="button1" onclick="saveAsPDF()">Save as PDF</button>
+            <button id="button1" onclick="send_email()">Send Email</button>
         </div>
     </main>
 
@@ -74,6 +86,52 @@
     </script>
 
     <script src="../static/JS/user.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const referrer = document.referrer;
+            const donorRegistrationPage = "/donor_register";
+
+            if (referrer.includes(donorRegistrationPage)) {
+                
+                send_email();
+            }
+        });
+
+        function send_email() {
+            const bookingId = "{{ booking['Booking ID'] }}";
+            const apiUrl = `/send_email/${bookingId}`;
+            
+            fetch(apiUrl)
+                .then(response => {
+                    if (response.ok) {
+                        showFlashMessage("Email sent successfully!", "success");
+                    } else {
+                        response.text().then(msg => showFlashMessage(`Failed to send email: ${msg}`, "danger"));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showFlashMessage("An error occurred while sending the email.", "danger");
+                });
+        }
+
+        function showFlashMessage(message, category) {
+            const flashMessagesContainer = document.querySelector(".flash-messages");
+
+            const messageDiv = document.createElement("div");
+            messageDiv.className = category;
+            messageDiv.textContent = message;
+
+            flashMessagesContainer.appendChild(messageDiv);
+
+            flashMessagesContainer.style.display = "block";
+
+            setTimeout(() => {
+                messageDiv.remove();
+                flashMessagesContainer.style.display = "none";
+            }, 5000);
+        }
+    </script>
 
 </body>
 </html>

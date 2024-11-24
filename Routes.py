@@ -1,8 +1,9 @@
 from flask import render_template, request, redirect, url_for, flash, session
-from User import load_users, save_user, hash_password
-from New_Donors import register_donor, load_bookings, save_donor, load_booking
+from User import load_users, save_user, hash_password, load_user_data, save_user_data
+from New_Donors import register_donor, load_bookings, save_donor, load_booking, send_email_with_pdf
 from Existing_Donors import Donors
 import hashlib
+import random
 
 def register_routes(app):
 
@@ -17,7 +18,7 @@ def register_routes(app):
     def dashboard():
         if 'username' in session:
             Donors.instantiate_from_csv()
-            return render_template('Dashboard.html', people=Donors.all, username=session['username'])
+            return render_template('Dashboard.html', people=Donors.all, username=session['username'], latitude=session['latitude'], longitude=session['longitude'], blood_group=session['blood_group'])
         else:
             flash("Please log in to access the dashboard.")
             return redirect(url_for('login'))
@@ -39,6 +40,13 @@ def register_routes(app):
             for user in users:
                 if user['username'] == username and user['password'] == hash_password(password):
                     session['username'] = username
+                    session['email'] = user['email']
+                    
+                    user_data = load_user_data(username)
+                    session['longitude'] = user_data.get('Longitude', None)
+                    session['latitude'] = user_data.get('Latitude', None)
+                    session['blood_group'] = user_data.get('Blood Group', None)
+                    
                     flash("Login successful!", "success")
                     return redirect(url_for('dashboard'))
             
@@ -78,7 +86,8 @@ def register_routes(app):
 
     @app.route('/donor_register', methods=['GET', 'POST'])
     def donor_register():
-        return register_donor(request, session)
+        booking_id = f"{random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ')}{random.randint(100000000, 999999999)}"
+        return register_donor(request, session, booking_id)
 
     @app.route('/my_bookings')
     def my_bookings():
@@ -103,3 +112,89 @@ def register_routes(app):
             return redirect(url_for('my_bookings'))
 
         return render_template('view_booking.html', booking=booking[0], username=session.get('username'),)
+    
+    @app.route('/send_email/<booking_id>')
+    def send_email(booking_id):
+        booking = load_booking(booking_id)
+        if not booking:
+            return "Booking not found", 404
+
+        try:
+            email = session.get('email')
+            booking_html = render_template('view_booking.html', booking=booking[0], username=session.get('username'))
+            send_email_with_pdf(email, booking_id, booking_html)
+            return "Email sent successfully", 200
+        except Exception as e:
+            print(f"Error sending email: {e}")
+            return "Failed to send email", 500
+
+    @app.route('/myprofile', methods=['GET', 'POST'])
+    def my_profile():
+        if 'username' not in session:
+            flash("You need to log in to view your profile.", "danger")
+            return redirect(url_for('login'))
+
+        username = session['username']
+        user_data = load_user_data(username)
+        if not user_data:
+            flash("Profile not found.", "danger")
+            return redirect(url_for('dashboard'))
+
+        return render_template(
+            'MyProfile.html',
+            username=user_data['username'],
+            email=user_data['email'],
+            first_name=user_data['First Name'],
+            middle_name=user_data['Middle Name'],
+            last_name=user_data['Last Name'],
+            age=user_data['Age'],
+            blood_group=user_data['Blood Group'],
+            address=user_data['Address'],
+            city=user_data['City'],
+            state=user_data['State'],
+            pin_code=user_data['Pin Code'],
+        )
+    
+    @app.route('/update_profile', methods=['POST'])
+    def update_profile():
+        if 'username' not in session:
+            flash("You need to log in to view your profile.", "danger")
+            return redirect(url_for('login'))
+
+        username = session['username']
+        user_data = load_user_data(username)
+        if not user_data:
+            flash("Profile not found.", "danger")
+            return redirect(url_for('dashboard'))
+        
+        if request.method == 'POST':
+            user_data['First Name'] = request.form.get('first_name', user_data['First Name'])
+            user_data['Middle Name'] = request.form.get('middle_name', user_data['First Name'])
+            user_data['Last Name'] = request.form.get('last_name', user_data['First Name'])
+            user_data['Age'] = request.form.get('age', user_data['First Name'])
+            user_data['Address'] = request.form.get('address', user_data['Address'])
+            user_data['City'] = request.form.get('city', user_data['City'])
+            user_data['State'] = request.form.get('state', user_data['State'])
+            user_data['Pin Code'] = request.form.get('pin_code', user_data['Pin Code'])
+            user_data['Blood Group'] = request.form.get('blood_group', user_data['Blood Group'])
+            user_data['Longitude'] = request.form.get('longitude', user_data['Longitude'])
+            user_data['Latitude'] = request.form.get('latitude', user_data['Latitude'])
+
+            save_user_data(user_data) 
+            flash("Profile updated successfully!", "success")
+            return redirect(url_for('my_profile'))
+
+        return render_template(
+            'MyProfile.html',
+            username=user_data['username'],
+            email=user_data['email'],
+            first_name=user_data['First Name'],
+            middle_name=user_data['Middle Name'],
+            last_name=user_data['Last Name'],
+            age=user_data['Age'],
+            blood_group=user_data['Blood Group'],
+            address=user_data['Address'],
+            city=user_data['City'],
+            state=user_data['State'],
+            pin_code=user_data['Pin Code'],
+        )

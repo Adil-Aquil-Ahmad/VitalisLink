@@ -5,34 +5,50 @@ class Donors:
         
     all = []
 
-    def __init__(self, name: str, age: int, blood_group: str, location: str) -> None:
+    def __init__(self, first_name: str, middle_name: str, last_name: str, age: int, blood_group: str, address: str, city: str, state: str, pin_code: int, latitude: float, longitude: float) -> None:
 
-        self.name = name
+        self.first_name = first_name
+        self.middle_name = middle_name
+        self.last_name = last_name
         self.age = age
         self.__blood_group = blood_group
-        self.location = location
+        self.address = address
+        self.city = city
+        self.state = state
+        self.pin_code = pin_code
+        self.latitude = latitude
+        self.longitude = longitude
 
         Blood_Groups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
 
         assert blood_group in Blood_Groups, f"{blood_group} is not a valid Blood Group"
         assert age>=18 and age<=60, f"{age}, is not in the permissible age group"
+        assert pin_code>=100000 and pin_code<=999999, f"{pin_code}, is not a valid pin code"
 
         Donors.all.append(self)
     
 
     def __str__(self) -> str:
 
-        return f"{self.name}\n \
+        return f"{self.first_name}\n \
+            {self.middle_name}\n \
+            {self.last_name}\n \
             {self.age}\n \
             {self.__blood_group}\n \
-            {self.location}"
+            {self.address}\n \
+            {self.city}\n \
+            {self.state}\n \
+            {self.pin_code}\n \
+            {self.latitude}\n \
+            {self.longitude}"
 
 
     def __repr__(self) -> str:
 
         return (
-            f"{self.__class__.__name__}({self.name}, {self.age}, "
-            f"{self.__blood_group}, {self.location})"
+            f"{self.__class__.__name__}({self.first_name}, {self.middle_name}, {self.last_name}, "
+            f"{self.age}, {self.__blood_group}, {self.address}, {self.city}, {self.state}, {self.pin_code})"
+            f"{self.latitude}, {self.longitude}"
         )
     
 
@@ -44,12 +60,24 @@ class Donors:
             people = list(reader)
             
             for donors in people:
-                Donors(
-                    name = donors.get('name'),
-                    age = int(donors.get('age').rstrip()),
-                    blood_group = donors.get('blood_group').rstrip(),
-                    location = donors.get('location')
-                )
+                try:
+                    Donors(
+                        first_name=donors.get('First Name'),
+                        middle_name=donors.get('Middle Name'),
+                        last_name=donors.get('Last Name'),
+                        age=int(donors.get('Age').strip()),
+                        blood_group=donors.get('Blood Group').strip(),
+                        address=donors.get('Address'),
+                        city=donors.get('City'),
+                        state=donors.get('State'),
+                        pin_code=int(donors.get('Pin Code')),
+                        latitude=float(donors.get('Latitude')),
+                        longitude=float(donors.get('Longitude'))
+                    )
+                except (AssertionError, ValueError) as e:
+
+                    print(f"Skipping invalid record: {donors}. Reason: {e}")
+                
 
 
     @classmethod
@@ -66,4 +94,4 @@ class Donors:
 
 # Donors.instantiate_from_user()
 Donors.instantiate_from_csv()
-# print(Donors.all)
+print(Donors.all)

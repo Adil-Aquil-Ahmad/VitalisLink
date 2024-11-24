@@ -32,6 +32,7 @@
                                 <div id="welcome">
                                     <p>Welcome, {{username}}</p>
                                 </div>
+                                <a href="/myprofile">My Profile</a>
                                 <a href="/my_bookings">My Bookings</a>
                                 <a href="/logout">Logout</a>
                             </div>
@@ -58,7 +59,7 @@
                         </div>
                     {% endif %}
                 {% endwith %}
-        
+                <div id="error-messages" class="error-box" style="display: none;"></div>
                 <form method="POST" action="/donor_register">
                     <div class="input-group inline-group">
                         <div>
@@ -87,23 +88,28 @@
         
                     <div class="input-group">
                         <label for="Address">Address</label>
-                        <input type="text" name="address" required>
+                        <input type="text" id="address" name="address" placeholder="Enter your address" required>
                     </div>
+                    <div class="input-group">
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
+                    </div>
+                    
         
                     <div class="input-group inline-group">
                         <div>
                             <label for="City">City</label>
-                            <input type="text" name="city" required>
+                            <input type="text" name="city" id="city" placeholder="City" required>
                         </div>
                         <div>
                             <label for="State">State</label>
-                            <input type="text" name="state" required>
+                            <input type="text" name="state" id="state" placeholder="State" required>
                         </div>
                         <div>
                             <label for="Pin_Code">Pin Code</label>
-                            <input type="number" name="pin_code" required>
+                            <input type="number" name="pin_code" id="pin_code" placeholder="Pin Code" required>
                         </div>
-                    </div>
+                    </div>                    
 
                     <div class="input-group">
                         <label for="donation_date">Preferred Date for Blood Donation</label>
@@ -130,5 +136,8 @@
 
     <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
     <script src="../static/JS/user.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVqc_k8hEt3CxwVNdYOWQHBF_NYLqIeac&libraries=places"></script>
+    <script src="../static/JS/maps.js"></script>
+    <script src="../static/JS/doner_register.js"></script>
 </body>
 </html>

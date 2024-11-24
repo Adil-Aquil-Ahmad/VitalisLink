@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | VitalisLink</title>
+    <link rel="shortcut icon" href="../static/Images/VITALISLINK LOGO LIGHT.png" type="image/x-icon">
+    <link rel="stylesheet" href="../static/CSS/myprofile.css">
+    <link rel="stylesheet" href="../static/CSS/user.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <img src="../static/Images/VITALISLINK LOGO LIGHT2.png" alt="" style="opacity: 100%; border-radius: 5px;">
+        <nav>
+            <ul class="menu">
+                <li><a href="/">Home</a></li>
+                <li>
+                    {% if username %}
+                        <a href="/donor_register">Donor Registration</a>
+                    {% else %}
+                        <a href="/login" onclick="alert('Please log in to register as a donor');">Donor Registration</a>
+                    {% endif %}
+                </li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/about">About</a></li>
+                <li>
+                    {% if username %}
+                        <div class="dropdown">
+                            <button onclick="myFunction()" class="dropbtn">{{username[0]}}</button>
+                            <div id="myDropdown" class="dropdown-content">
+                                <div id="welcome">
+                                    <p>Welcome, {{username}}</p>
+                                </div>
+                                <a href="/myprofile">My Profile</a>
+                                <a href="/my_bookings">My Bookings</a>
+                                <a href="/logout">Logout</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="/login">Login</a>
+                    {% endif %}
+                </li>   
+            </ul>        
+        </nav>
+    </header>
+    
+    <main>
+        <section class="profile-register-section">
+            <div class="profile-login-form">
+                <h2>My Profile</h2>
+                
+                <form method="POST" action="/update_profile">
+                    <div class="input-group inline-group">
+                        <div>
+                            <label for="First_Name">First Name</label>
+                            <input type="text" id="first_name" name="first_name" value="{{first_name}}" readonly>
+                        </div>
+                        <div>
+                            <label for="Middle_Name">Middle Name</label>
+                            <input type="text" id="middle_name" name="middle_name" value="{{middle_name}}" readonly>
+                        </div>
+                        <div>
+                            <label for="Last_Name">Last Name</label>
+                            <input type="text" id="last_name"  name="last_name" value="{{last_name}}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="{{email}}" readonly>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="Age">Age</label>
+                        <input type="number" id="age" name="age" value="{{age}}" readonly>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="blood_group">Blood Group</label>
+                        <input type="text" id="blood_group" name="blood_group" value="{{blood_group}}" readonly>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" value="{{address}}" readonly>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
+                    </div>
+                
+                    <div class="input-group inline-group">
+                        <div>
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" value="{{city}}" readonly>
+                        </div>
+                        <div>
+                            <label for="state">State</label>
+                            <input type="text" id="state" name="state" value="{{state}}" readonly>
+                        </div>
+                        <div>
+                            <label for="pin_code">Pin Code</label>
+                            <input type="text" id="pin_code" name="pin_code" value="{{pin_code}}" readonly>
+                        </div>
+                    </div>
+                
+                    <button type="button" class="profile-button edit-btn">Edit</button>
+                    <button type="submit" class="profile-button save-btn" style="display: none;">Save</button>
+                </form>
+            </div>
+        </section>        
+    </main>
+
+    <script src="../static/JS/myprofile.js"></script>
+    <script src="../static/JS/maps.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVqc_k8hEt3CxwVNdYOWQHBF_NYLqIeac&libraries=places"></script>
+    <script src="../static/JS/user.js"></script>
+
+</body>
+</html>

@@ -23,16 +23,24 @@
     border-color: #dc143c;
 }
 
+.dashboard-section {
+    overflow-x: auto;
+    max-height: 800px;
+}
+
 table {
     width: 100%;
     margin-top: 20px;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 table th, table td {
     padding: 1em;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+    max-width: 200px;
 }
 
 table th {
@@ -45,36 +53,3 @@ table tr:hover {
     background-color: #f4f4f4;
 }
 
-.dashboard-section {
-    overflow-x: auto;
-}
-
-#bloodGroupFilter {
-    padding: 0.5em;
-    font-size: 1em;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    margin-left: 10px;
-    transition: border 0.3s ease;
-}
-
-#bloodGroupFilter:hover,
-#bloodGroupFilter:focus {
-    border-color: #780606;
-}
-
-#locationFilter {
-    padding: 0.5em;
-    font-size: 1em;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    margin-left: 10px;
-    transition: border 0.3s ease;
-}
-
-#locationFilter:hover,
-#locationFilter:focus {
-    border-color: #dc143c;
-}
