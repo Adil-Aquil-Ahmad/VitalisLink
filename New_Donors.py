@@ -66,11 +66,11 @@ def load_booking(booking_id):
 
 def send_email_with_pdf(user_email, booking_id, booking_html):
 
-    base_url = "https://vitalis-link-br9rmx4xz-adil-aquil-ahmads-projects.vercel.app"
+    base_url = "https://vitalis-link.vercel.app"
     
     booking_html = booking_html.replace("../static/", f"{base_url}/static/")
     
-    path_to_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+    path_to_wkhtmltopdf = r'wkhtmltopdf\bin\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
     
     pdf_filename = f"static/Bookings/{booking_id}_booking.pdf"
