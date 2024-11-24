@@ -79,7 +79,7 @@
                     <option value="Chennai">Chennai</option>
                     <option value="Hyderabad">Hyderabad</option>
                 </select>
-                
+
             </div>
 
             <!-- Table -->
@@ -136,24 +136,23 @@
     <script src="../static/JS/user.js"></script>
     <script>
         function haversine(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radius of the Earth in km
+            const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
             const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                     Math.sin(dLon / 2) * Math.sin(dLon / 2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c; // Distance in km
+            return R * c;
         }
 
         function filterNearestDonors() {
-            const userLatitude = {{ latitude }};  // Get user's latitude from session
-            const userLongitude = {{ longitude }};  // Get user's longitude from session
-            const userBloodGroup = "{{ blood_group }}";  // Get user's blood group from session
+            const userLatitude = {{ latitude }};
+            const userLongitude = {{ longitude }};
+            const userBloodGroup = "{{ blood_group }}";
 
             const rows = document.querySelectorAll("#donationTable .person-row");
 
-            // Create an array to hold donor data with their distance and blood group
             let donors = [];
 
             rows.forEach(function(row) {
@@ -161,7 +160,6 @@
                 const donorLongitude = parseFloat(row.getAttribute("data-longitude"));
                 const donorBloodGroup = row.getAttribute("data-blood-group");
 
-                // Check if the coordinates are the same, if yes return distance as 0 km
                 let distance = 0;
                 if (userLatitude !== donorLatitude || userLongitude !== donorLongitude) {
                     distance = haversine(userLatitude, userLongitude, donorLatitude, donorLongitude);
@@ -174,23 +172,18 @@
                 });
             });
 
-            // Sort donors:
-            // 1. Prioritize same blood group as the user
-            // 2. Sort by proximity (distance)
+
             donors.sort(function(a, b) {
-                // Prioritize users with matching blood groups
                 if (a.bloodGroup === userBloodGroup && b.bloodGroup !== userBloodGroup) {
-                    return -1;  // a comes before b
+                    return -1;
                 } else if (a.bloodGroup !== userBloodGroup && b.bloodGroup === userBloodGroup) {
-                    return 1;  // b comes before a
+                    return 1;
                 } else {
-                    return a.distance - b.distance;  // Sort by proximity if blood groups match
+                    return a.distance - b.distance;
                 }
             });
 
-            // Reorder the rows based on the sorted array
             donors.forEach(function(donor) {
-                // Update the 'Locate' column with the distance
                 donor.row.querySelector(".distance-cell").textContent = donor.distance.toFixed(2) + " km";
 
                 document.querySelector("#donationTable tbody").appendChild(donor.row);

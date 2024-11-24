@@ -6,5 +6,4 @@ app.secret_key = 'adajsj435a$mKM%6mkls%mlamfo'
 
 register_routes(app)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
