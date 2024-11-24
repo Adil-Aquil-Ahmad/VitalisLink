@@ -57,7 +57,7 @@
     <main class="booking-section">
         <div class="booking-details-container">
             <div class="qr-code">
-                <img src="../static/QR_Codes/{{ booking['QR File Name'] }}" alt="QR Code" style="width: 270px; height: 270px;">
+                <img src="data:image/png;base64,{{ booking['QR Code (Base64)'] }}" alt="QR Code" style="width: 270px; height: 270px;">
             </div>
             <div class="booking-info">
                 <h2>Donor Booking Details</h2>

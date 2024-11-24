@@ -10,15 +10,17 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
+import io
+import base64
 
-def save_donor(username, email, first_name, middle_name, last_name, age, blood_group, address, city, state, pin_code, latitude, longitude, donation_date, slot, booking_id, qr_filename):
+def save_donor(username, email, first_name, middle_name, last_name, age, blood_group, address, city, state, pin_code, latitude, longitude, donation_date, slot, booking_id, qr_binary):
     status = "Confirmed"
     
     with open('Blood_Donors_Database.csv', 'a', newline='') as f:
         fieldnames = [
             'username', 'email', 'Booking ID', 'First Name', 'Middle Name', 'Last Name', 
             'Age', 'Blood Group', 'Address', 'City', 'State', 'Pin Code', 'Latitude', 
-            'Longitude', 'Preferred Slot', 'Donation Date', 'Status', 'QR File Name'
+            'Longitude', 'Preferred Slot', 'Donation Date', 'Status', 'QR Code (Base64)'
         ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         
@@ -43,7 +45,7 @@ def save_donor(username, email, first_name, middle_name, last_name, age, blood_g
             'Preferred Slot': slot,
             'Donation Date': donation_date,
             'Status': status,
-            'QR File Name': qr_filename
+            'QR Code (Base64)': qr_binary
         })
 
 def load_bookings(username):
@@ -66,7 +68,7 @@ def load_booking(booking_id):
 
 def send_email_with_pdf(user_email, booking_id, booking_html):
 
-    base_url = "https://vitalis-link.vercel.app"
+    base_url = "http://localhost:5000"
     
     booking_html = booking_html.replace("../static/", f"{base_url}/static/")
     
@@ -117,7 +119,7 @@ def register_donor(request, session, booking_id):
         last_name = request.form['last_name']
         age = int(request.form['age'])
         if age < 18:
-            flash('You must be atleast 18 years old to donate blood.', 'error')
+            flash('You must be at least 18 years old to donate blood.', 'error')
             return redirect('/donor_register')
         blood_group = request.form['blood_group'].upper()
         if blood_group not in Blood_Groups:
@@ -133,15 +135,23 @@ def register_donor(request, session, booking_id):
         donation_date = request.form['donation_date']
         username = session['username']
         email = session['email']
-        status = "Confirmed"       
+        status = "Confirmed"
+
+        # Generate QR Code
         qr_data = f"{first_name} {middle_name} {last_name}, Age: {age}, Blood Group: {blood_group}, Address: {address}, {city}, {state}, {pin_code}, Slot: {slot}, Booking ID: {booking_id}, Date: {donation_date}, Status: {status}"
-        qr = qrcode.make(qr_data)
-        qr_filename = f"{first_name}_{last_name}_QR.png"
-        qr_path = f"static/QR_Codes/{qr_filename}"
-        os.makedirs("static/QR_Codes", exist_ok=True)
-        qr.save(qr_path)
-        save_donor(username, email, first_name, middle_name, last_name, age, blood_group, address, city, state, pin_code, latitude, longitude, donation_date, slot, booking_id, qr_filename)
-        
+        qr = qrcode.QRCode()
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+
+        # Save QR code to memory as binary
+        img_io = io.BytesIO()
+        img.save(img_io, format="PNG")
+        img_io.seek(0)
+        qr_binary = base64.b64encode(img_io.getvalue()).decode('utf-8')
+
+        # Save donor details and QR code binary to CSV
+        save_donor(username, email, first_name, middle_name, last_name, age, blood_group, address, city, state, pin_code, latitude, longitude, donation_date, slot, booking_id, qr_binary)      
 
         # booking_html = render_template('donor_booking.html',
         #                                booking_id=booking_id, donation_date=donation_date, status=status,
