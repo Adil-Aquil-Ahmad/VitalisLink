@@ -12,6 +12,7 @@ from email.mime.base import MIMEBase
 from email import encoders
 import io
 import base64
+from Existing_Donors import Donors
 
 def save_donor(username, email, first_name, middle_name, last_name, age, blood_group, address, city, state, pin_code, latitude, longitude, donation_date, slot, booking_id, qr_binary):
     status = "Confirmed"
@@ -54,6 +55,8 @@ def load_bookings(username):
         reader = csv.DictReader(f)
         for booking in reader:
             if booking['username'] == username:
+                bookings.append(booking)
+            elif username == "admin":
                 bookings.append(booking)
     return bookings
 
@@ -107,6 +110,34 @@ def send_email_with_pdf(user_email, booking_id, booking_html):
         server.login(sender_email, sender_password)
         server.sendmail(sender_email, receiver_email, msg.as_string())
 
+def getbookings():
+    Donors.new.clear()
+    with open('Blood_Donors_Database.csv', 'r') as f:
+            reader = csv.DictReader(f)
+            New_Donors = list(reader)
+
+            for donors in New_Donors:
+                try:
+                    Donors(
+                        first_name=donors.get('First Name'),
+                        middle_name=donors.get('Middle Name'),
+                        last_name=donors.get('Last Name'),
+                        age=int(donors.get('Age').strip()),
+                        blood_group=donors.get('Blood Group').strip(),
+                        address=donors.get('Address'),
+                        city=donors.get('City'),
+                        state=donors.get('State'),
+                        pin_code=int(donors.get('Pin Code')),
+                        latitude=float(donors.get('Latitude')),
+                        longitude=float(donors.get('Longitude')),
+                        status=donors.get('Status')
+                    )
+                    
+                except (AssertionError, ValueError) as e:
+
+                    print(f"Skipping invalid record: {donors}. Reason: {e}")
+
+
 def register_donor(request, session, booking_id):
     if 'username' not in session:
         flash("Please log in to register as a donor.", "warning")
@@ -137,20 +168,17 @@ def register_donor(request, session, booking_id):
         email = session['email']
         status = "Confirmed"
 
-        # Generate QR Code
         qr_data = f"{first_name} {middle_name} {last_name}, Age: {age}, Blood Group: {blood_group}, Address: {address}, {city}, {state}, {pin_code}, Slot: {slot}, Booking ID: {booking_id}, Date: {donation_date}, Status: {status}"
         qr = qrcode.QRCode()
         qr.add_data(qr_data)
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
 
-        # Save QR code to memory as binary
         img_io = io.BytesIO()
         img.save(img_io, format="PNG")
         img_io.seek(0)
         qr_binary = base64.b64encode(img_io.getvalue()).decode('utf-8')
 
-        # Save donor details and QR code binary to CSV
         save_donor(username, email, first_name, middle_name, last_name, age, blood_group, address, city, state, pin_code, latitude, longitude, donation_date, slot, booking_id, qr_binary)      
 
         # booking_html = render_template('donor_booking.html',
@@ -169,3 +197,6 @@ def register_donor(request, session, booking_id):
 
         return redirect(url_for('view_booking', booking_id=booking_id))
     return render_template('Donor_register.html', username=session['username'])
+
+# getbookings()
+# print(Donors.new)

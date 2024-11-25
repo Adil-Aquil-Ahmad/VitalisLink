@@ -14,3 +14,8 @@ function myFunction() {
       }
     }
   }
+
+setTimeout(() => {
+    const flashMessages = document.querySelectorAll('.flash-messages');
+    flashMessages.forEach(msg => msg.style.display = 'none');
+}, 5000);

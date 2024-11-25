@@ -23,6 +23,11 @@
                     {% endif %}
                 </li>
                 <li><a href="/dashboard">Dashboard</a></li>
+                <li>
+                    {% if username=="admin" %}
+                    <a href="/admin_dashboard">Admin Dashboard</a>
+                    {% endif %}
+                </li>
                 <li><a href="/about">About</a></li>
                 <li>
                     {% if username %}
@@ -50,15 +55,17 @@
             <div class="Donor-login-form">
                 <h2>Sign Up</h2>
                 
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        <div class="flash-messages">
+                <div id="flashes">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
                             {% for category, message in messages %}
-                                <p class="{{ category }}">{{ message }}</p>
+                                <div class="flash-messages">
+                                    <p class="{{category}}">{{ message }}</p>
+                                </div>
                             {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
                 <div id="error-messages" class="error-box" style="display: none;"></div>
                 <form method="POST" action="/donor_register">
                     <div class="input-group inline-group">

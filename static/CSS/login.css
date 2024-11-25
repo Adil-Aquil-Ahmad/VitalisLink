@@ -183,3 +183,24 @@
   background-color: #d9edf7;
   border: 1px solid #bce8f1;
 }
+
+.input-group select {
+  width: 100%;
+  padding: 0.8em;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+}
+
+.input-group select:focus {
+  outline: none;
+  border-color: #951a1a;
+}
+
+.flash-messages .admin {
+  color: #4b0082;
+  background-color: #f5e6ff;
+  border: 1px solid #4b0082;
+}

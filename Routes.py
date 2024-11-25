@@ -1,9 +1,22 @@
 from flask import render_template, request, redirect, url_for, flash, session
 from User import load_users, save_user, hash_password, load_user_data, save_user_data
-from New_Donors import register_donor, load_bookings, save_donor, load_booking, send_email_with_pdf
+from New_Donors import register_donor, load_bookings, save_donor, load_booking, send_email_with_pdf, getbookings
 from Existing_Donors import Donors
 import hashlib
 import random
+import csv
+import os
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = './uploads'
+ALLOWED_EXTENSIONS = {'csv'}
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def register_routes(app):
 
@@ -17,7 +30,7 @@ def register_routes(app):
     @app.route('/dashboard')
     def dashboard():
         if 'username' in session:
-            Donors.instantiate_from_csv()
+            Donors.instantiate_from_csv('Blood_Collection_Database.csv')
             return render_template('Dashboard.html', people=Donors.all, username=session['username'], latitude=session['latitude'], longitude=session['longitude'], blood_group=session['blood_group'])
         else:
             flash("Please log in to access the dashboard.")
@@ -35,12 +48,14 @@ def register_routes(app):
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
+            user_type = request.form.get('user_type')
             users = load_users()
             
             for user in users:
                 if user['username'] == username and user['password'] == hash_password(password):
                     session['username'] = username
                     session['email'] = user['email']
+                    session['user_type'] = user_type  
                     
                     user_data = load_user_data(username)
                     session['longitude'] = user_data.get('Longitude', None)
@@ -48,7 +63,10 @@ def register_routes(app):
                     session['blood_group'] = user_data.get('Blood Group', None)
                     
                     flash("Login successful!", "success")
-                    return redirect(url_for('dashboard'))
+                    if user_type == 'admin':
+                        return redirect(url_for('admin_dashboard'))
+                    else:
+                        return redirect(url_for('my_profile'))
             
             flash("Invalid username or password.", "danger")
             return redirect(url_for('login'))
@@ -91,7 +109,12 @@ def register_routes(app):
 
     @app.route('/my_bookings')
     def my_bookings():
-        if 'username' in session:
+        if 'username' in session and session.get('user_type') == 'admin':
+            username = session['username']
+            bookings = load_bookings(username)
+            status="confirmed"
+            return render_template('My_Bookings.html', bookings=bookings, username=username, status=status)
+        elif 'username' in session:
             username = session['username']
             bookings = load_bookings(username)
             status="confirmed"
@@ -198,3 +221,42 @@ def register_routes(app):
             state=user_data['State'],
             pin_code=user_data['Pin Code'],
         )
+    
+    @app.route('/admin_dashboard')
+    def admin_dashboard():
+        getbookings()
+        if session.get('user_type') == 'admin':
+            New_Donors = Donors.new
+            return render_template('Admin_Dashboard.html', people=New_Donors, username=session['username'], latitude=session['latitude'], longitude=session['longitude'], blood_group=session['blood_group'])
+        else: 
+            flash("Unauthorized access!", "danger")
+            return redirect(url_for('login'))
+        
+    @app.route('/upload_csv', methods=['POST'])
+    def upload_csv():
+        if 'csv_file' not in request.files:
+            flash("No file part", "danger")
+            return redirect(url_for('dashboard'))
+        
+        file = request.files['csv_file']
+        if file.filename == '':
+            flash("No selected file", "danger")
+            return redirect(url_for('dashboard'))
+        
+        if file and allowed_file(file.filename):
+            try:
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(file_path)
+
+                Donors.instantiate_from_admin(file_path, session['username'])
+                flash("Records successfully added!", "success")
+            except Exception as e:
+                flash(f"Error processing file: {e}", "danger")
+            finally:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+        else:
+            flash("Invalid file format. Please upload a CSV file.", "danger")
+        
+        return redirect(url_for('dashboard'))

@@ -77,26 +77,35 @@
     text-align: center;
   }
   
-  .flash-messages .success {
+.flash-messages .success {
     color: #2e7d32;
     background-color: #e6f5e6;
     border: 1px solid #2e7d32;
   }
   
-  .flash-messages .danger {
+.flash-messages .danger {
     color: #dc143c;
     background-color: #ffe6e6;
     border: 1px solid #dc143c;
   }
   
-  .flash-messages .info {
+.flash-messages .info {
     color: #31708f;
     background-color: #d9edf7;
     border: 1px solid #bce8f1;
   }
 
-  .flash-messages .error {
+.flash-messages .error {
     color: #f44336;
     background-color: #ffe6e6;
     border: 1px solid #dc143c;
   }
+
+.flash-messages {
+    transition: opacity 0.5s ease-out;
+}
+
+.flash-messages.hidden {
+    opacity: 0;
+    display: none;
+}

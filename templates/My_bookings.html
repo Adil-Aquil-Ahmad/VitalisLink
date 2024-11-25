@@ -22,6 +22,11 @@
                     {% endif %}
                 </li>
                 <li><a href="/dashboard">Dashboard</a></li>
+                <li>
+                    {% if username=="admin" %}
+                    <a href="/admin_dashboard">Admin Dashboard</a>
+                    {% endif %}
+                </li>
                 <li><a href="/about">About</a></li>
                 <li>
                     {% if username %}
@@ -50,6 +55,9 @@
             {% if bookings %}
                 {% for booking in bookings %}
                     <div class="booking-item">
+                        {% if username=="admin" %}
+                        <p><strong>Username:</strong> {{ booking['username'] }}</p>
+                        {% endif %}
                         <p><strong>Booking ID:</strong> {{ booking['Booking ID'] }}</p>
                         <p><strong>Date:</strong> {{ booking['Donation Date'] }}</p>
                         <p><strong>Time Slot:</strong> {{ booking['Preferred Slot'] }}</p>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VitalisLink | Dashboard</title>
     <link rel="stylesheet" href="../static/CSS/Style.css">
-    <link rel="stylesheet" href="../static/CSS/dashboard.css">
+    <link rel="stylesheet" href="../static/CSS/admin_dashboard.css">
     <link rel="stylesheet" href="../static/CSS/user.css">
     <link rel="shortcut icon" href="../static/Images/VITALISLINK LOGO LIGHT.png" type="image/x-icon">
 </head>
@@ -86,33 +86,23 @@
                         <option value="Chennai">Chennai</option>
                         <option value="Hyderabad">Hyderabad</option>
                     </select>
-
-                    <div class="csv-upload">
-                        <form id="csvfile" action="/upload_csv" method="POST" enctype="multipart/form-data">
-                            <label for="csvfile">Upload CSV File: </label>
-                            <input type="file" name="csv_file" accept=".csv" required>
-                            <button type="submit">Upload</button>
-                        </form>
-                    </div>
                 </div>
 
                 
 
             </div>
-            
-                            
+
             <div id="flashes">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="flash-messages">
-                                <p class="{{category}}">{{ message }}</p>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-messages">
+                            <p class="{{category}}">{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             </div>
-        <div id="error-messages" class="error-box" style="display: none;"></div>
 
             <!-- Table -->
             <table id="donationTable">

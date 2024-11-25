@@ -32,22 +32,18 @@ def load_user_data(username):
     return None
 
 def save_user_data(updated_data):
-    # Read the existing data into memory (excluding the header)
     with open('User_Database.csv', mode='r', newline='') as f:
         reader = csv.DictReader(f)
-        rows = list(reader)  # Read all rows into memory
+        rows = list(reader)
     
-    # Flag to indicate whether we've updated the user data
     user_updated = False
     
-    # Update the row for the specific username
     for row in rows:
         if row['username'] == updated_data['username']:
-            row.update(updated_data)  # Update the row with the new data
+            row.update(updated_data)
             user_updated = True
-            break  # Once we find and update the user, exit the loop
+            break
     
-    # If the user was updated, write the modified data back to the file
     if user_updated:
         with open('User_Database.csv', mode='w', newline='') as f:
             fieldnames = [
@@ -56,8 +52,8 @@ def save_user_data(updated_data):
                 'Longitude'
             ]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
-            writer.writeheader()  # Write the header row first
-            writer.writerows(rows)  # Write all rows (including the updated one)
+            writer.writeheader()
+            writer.writerows(rows)
     else:
         print(f"User with username {updated_data['username']} not found.")
 
