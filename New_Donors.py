@@ -68,7 +68,7 @@ def load_booking(booking_id):
 
 def send_email_with_pdf(user_email, booking_id, booking_html):
 
-    base_url = "http://localhost:5000"
+    base_url = "http://127.0.0.1:5000"
     
     booking_html = booking_html.replace("../static/", f"{base_url}/static/")
     
