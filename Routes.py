@@ -113,12 +113,12 @@ def register_routes(app):
             username = session['username']
             bookings = load_bookings(username)
             status="confirmed"
-            return render_template('My_Bookings.html', bookings=bookings, username=username, status=status)
+            return render_template('My_bookings.html', bookings=bookings, username=username, status=status)
         elif 'username' in session:
             username = session['username']
             bookings = load_bookings(username)
             status="confirmed"
-            return render_template('My_Bookings.html', bookings=bookings, username=username, status=status)
+            return render_template('My_bookings.html', bookings=bookings, username=username, status=status)
         else:
             flash("Please log in to view your bookings.")
             return redirect(url_for('login'))
