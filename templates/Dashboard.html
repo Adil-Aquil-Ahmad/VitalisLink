@@ -86,7 +86,7 @@
                         <option value="Chennai">Chennai</option>
                         <option value="Hyderabad">Hyderabad</option>
                     </select>
-
+                    {% if username=="admin" %}
                     <div class="csv-upload">
                         <form id="csvfile" action="/upload_csv" method="POST" enctype="multipart/form-data">
                             <label for="csvfile">Upload CSV File: </label>
@@ -94,6 +94,7 @@
                             <button type="submit">Upload</button>
                         </form>
                     </div>
+                    {% endif %}
                 </div>
 
                 
