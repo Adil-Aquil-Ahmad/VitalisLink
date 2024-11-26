@@ -71,6 +71,8 @@ def load_booking(booking_id):
     return bookings
 
 def Create_PDF(booking_id, booking_data, timeout=120):
+
+    os.makedirs('tmp/Bookings/', exist_ok=True)
     pdf_filename = f"tmp/Bookings/{booking_id}_booking.pdf"
     
     c = canvas.Canvas(pdf_filename, pagesize=letter)
