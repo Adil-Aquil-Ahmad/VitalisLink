@@ -134,7 +134,7 @@ def register_routes(app):
             flash("Booking not found.", "danger")
             return redirect(url_for('my_bookings'))
 
-        return render_template('view_booking.html', booking=booking[0], username=session.get('username'),)
+        return render_template('View_booking.html', booking=booking[0], username=session.get('username'),)
     
     @app.route('/send_email/<booking_id>')
     def send_email(booking_id):
@@ -144,7 +144,7 @@ def register_routes(app):
 
         try:
             email = session.get('email')
-            booking_html = render_template('view_booking.html', booking=booking[0], username=session.get('username'))
+            booking_html = render_template('View_booking.html', booking=booking[0], username=session.get('username'))
             send_email_with_pdf(email, booking_id, booking_html)
             return "Email sent successfully", 200
         except Exception as e:

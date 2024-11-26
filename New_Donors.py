@@ -193,7 +193,7 @@ def register_donor(request, session, booking_id):
         #     f.write(booking_html)
 
         booking = load_booking(booking_id)
-        booking_html = render_template('view_booking.html', booking=booking[0], username=session.get('username'),)
+        booking_html = render_template('View_booking.html', booking=booking[0], username=session.get('username'),)
 
         return redirect(url_for('view_booking', booking_id=booking_id))
     return render_template('Donor_register.html', username=session['username'])
