@@ -15,8 +15,6 @@ import base64
 from Existing_Donors import Donors
 
 
-# load_dotenv()
-
 def save_donor(username, email, first_name, middle_name, last_name, age, blood_group, address, city, state, pin_code, latitude, longitude, donation_date, slot, booking_id, qr_binary):
     status = "Confirmed"
     
@@ -73,7 +71,7 @@ def load_booking(booking_id):
     return bookings
 
 def Create_PDF(booking_id, booking_data, timeout=120):
-    pdf_filename = f"static/Bookings/{booking_id}_booking.pdf"
+    pdf_filename = f"tmp/Bookings/{booking_id}_booking.pdf"
     
     c = canvas.Canvas(pdf_filename, pagesize=letter)
     width, height = letter

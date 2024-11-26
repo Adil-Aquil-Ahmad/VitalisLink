@@ -2,7 +2,9 @@ from flask import render_template, request, redirect, url_for, flash, session
 from User import load_users, save_user, hash_password, load_user_data, save_user_data
 from New_Donors import register_donor, load_bookings, save_donor, load_booking, Create_PDF, getbookings
 from Existing_Donors import Donors
+import hashlib
 import random
+import csv
 import os
 from werkzeug.utils import secure_filename
 import smtplib
@@ -190,6 +192,7 @@ def register_routes(app):
             email = session.get('email')
             PDF_Filename = Create_PDF(booking_id, booking[0])
             send_email_with_pdf(PDF_Filename)
+            os.remove(PDF_Filename)
             return "Email sent successfully", 200
         except Exception as e:
             print(f"Error sending email: {e}")
@@ -305,3 +308,18 @@ def register_routes(app):
 
         return redirect(url_for('dashboard'))
     
+    # @app.route('/test_pdf')
+    # def test_pdf():
+    #     try:
+    #         path_to_wkhtmltopdf = '/usr/bin/wkhtmltopdf'
+    #         config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
+    #         test_html = "<html><body><h1>Test PDF</h1></body></html>"
+    #         pdf_filename = "test_output.pdf"
+    #         sender_email = os.getenv('SENDER_EMAIL')
+    #         sender_password = os.getenv('EMAIL_PASSWORD')
+    #         send_email_with_pdf1()
+    #         print(f"SENDER_EMAIL: {sender_email}, EMAIL_PASSWORD: {sender_password}")
+    #         pdfkit.from_string(test_html, pdf_filename, configuration=config)
+    #         return "PDF generated successfully."
+    #     except Exception as e:
+    #         return f"Error: {e}"
