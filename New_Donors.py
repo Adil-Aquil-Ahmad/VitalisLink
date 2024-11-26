@@ -1,15 +1,18 @@
 import csv
-import random
 import qrcode
 import os
-import pdfkit
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import landscape
+from reportlab.lib.units import inch
 from flask import render_template, flash, redirect, url_for
 from datetime import datetime
 import io
+from io import BytesIO
+from PIL import Image
 import base64
 from Existing_Donors import Donors
-import subprocess
-# from dotenv import load_dotenv
 
 
 # load_dotenv()
@@ -70,82 +73,88 @@ def load_booking(booking_id):
     return bookings
 
 def Create_PDF(booking_id, booking_data, timeout=120):
-    base_url = "http://127.0.0.1:8000"
     pdf_filename = f"static/Bookings/{booking_id}_booking.pdf"
-    os.makedirs(os.path.dirname(pdf_filename), exist_ok=True)
+    
+    c = canvas.Canvas(pdf_filename, pagesize=letter)
+    width, height = letter
 
-    booking_html = f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Booking Confirmation</title>
-        <style>
-            body {{
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-            }}
-            .booking-section {{
-                padding: 20px;
-                max-width: 800px;
-                margin: auto;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                background: #f9f9f9;
-            }}
-            .booking-details-container {{
-                display: flex;
-                flex-wrap: wrap;
-                gap: 20px;
-            }}
-            .qr-code img {{
-                max-width: 100%;
-                height: auto;
-                margin-right: 10px;
-            }}
-            .booking-info {{
-                flex: 1;
-                line-height: 1.5;
-            }}
-            .booking-info h2 {{
-                margin-top: 0;
-            }}
-        </style>
-    </head>
-    <body>
-        <main class="booking-section">
-            <div class="booking-details-container">
-                <div class="qr-code">
-                    <img src="data:image/png;base64,{booking_data['QR Code (Base64)']}" alt="QR Code" style="width: 270px; height: 270px;">
-                </div>
-                <div class="booking-info">
-                    <h2>Donor Booking Details</h2>
-                    <p><strong>Full Name:</strong> {booking_data['First Name']} {booking_data['Middle Name']} {booking_data['Last Name']}</p>
-                    <p><strong>Age:</strong> {booking_data['Age']}</p>
-                    <p><strong>Blood Group:</strong> {booking_data['Blood Group']}</p>
-                    <p><strong>Address:</strong> {booking_data['Address']}, {booking_data['City']}, {booking_data['State']} - {booking_data['Pin Code']}</p>
-                    <p><strong>Time Slot:</strong> {booking_data['Preferred Slot']}</p>
-                    <p><strong>Booking ID:</strong> {booking_data['Booking ID']}</p>
-                    <p><strong>Date:</strong> {booking_data['Donation Date']}</p>
-                    <p><strong>Status:</strong> {booking_data['Status']}</p>
-                </div>
-            </div>
-        </main>
-    </body>
-    </html>
-    """
+    c.setFont("Helvetica-Bold", 18)
+    c.setFillColorRGB(0, 0, 0)
+    c.drawString(50, height - 40, "VitalisLink")
+    
+    c.drawImage("static/Images/VITALISLINK LOGO LIGHT2.png", 450, height - 55, width=100, height=30)
 
-    path_to_wkhtmltopdf = '/usr/bin/wkhtmltopdf'
-    config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
+    c.setStrokeColor(colors.darkred)
+    c.setLineWidth(2)
+    c.line(50, height - 70, width - 50, height - 70)
 
-    try:
-        pdfkit.from_string(booking_html, pdf_filename, configuration=config)
-        print(f"PDF generated: {pdf_filename}, Size: {os.path.getsize(pdf_filename)} bytes")
-    except subprocess.TimeoutExpired:
-        print(f"PDF generation timed out after {timeout} seconds.")
-        raise
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(50, height - 90, "Donor Booking Details")
+
+    y_position = height - 120
+    c.setFont("Helvetica", 12)
+
+    c.drawString(50, y_position, f"Full Name: {booking_data['First Name']} {booking_data['Middle Name']} {booking_data['Last Name']}")
+    y_position -= 20
+
+    c.drawString(50, y_position, f"Age: {booking_data['Age']}")
+    y_position -= 20
+
+    c.drawString(50, y_position, f"Blood Group: {booking_data['Blood Group']}")
+    y_position -= 20
+    
+    address = f"Address: {booking_data['Address']}, {booking_data['City']}"
+    address_lines = address.split(" ")
+    
+    line = ""
+    lines = []
+    for word in address_lines:
+        if len(line.split(" ")) <= 6:
+            line += word + " "
+        else:
+            lines.append(line.strip())
+            line = word + " "
+    if line:
+        lines.append(line.strip())
+    
+    for line in lines:
+        c.drawString(50, y_position, f"{line}")
+        y_position -= 15
+    
+    c.drawString(50, y_position, f"{booking_data['State']} - {booking_data['Pin Code']}")
+    y_position -= 25
+
+    c.drawString(50, y_position, f"Time Slot: {booking_data['Preferred Slot']}")
+    y_position -= 20
+
+    c.drawString(50, y_position, f"Booking ID: {booking_data['Booking ID']}")
+    y_position -= 20
+
+    c.drawString(50, y_position, f"Date: {booking_data['Donation Date']}")
+    y_position -= 20
+
+    c.drawString(50, y_position, f"Status: {booking_data['Status']}")
+    y_position += 210
+    
+    qr_base64 = booking_data['QR Code (Base64)']
+    img_data = base64.b64decode(qr_base64)
+    
+    img = Image.open(BytesIO(img_data))
+    img.save("temp_qr.png")
+
+    box_x = width - 162
+    box_y = y_position - 120
+    box_size = 100
+    c.setStrokeColor(colors.darkred)
+    c.setLineWidth(2)
+    c.rect(box_x - 10, box_y - 10, box_size + 20, box_size + 20)
+    c.drawImage("temp_qr.png", box_x, box_y, width=box_size, height=box_size)
+
+    c.save()
+
+    os.remove("temp_qr.png")
+
+    print(f"PDF generated: {pdf_filename}, Size: {os.path.getsize(pdf_filename)} bytes")
 
     return pdf_filename
 
