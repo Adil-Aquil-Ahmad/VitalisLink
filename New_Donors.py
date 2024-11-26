@@ -3,16 +3,16 @@ import random
 import qrcode
 import os
 import pdfkit
-import smtplib
 from flask import render_template, flash, redirect, url_for
 from datetime import datetime
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
 import io
 import base64
 from Existing_Donors import Donors
+import subprocess
+# from dotenv import load_dotenv
+
+
+# load_dotenv()
 
 def save_donor(username, email, first_name, middle_name, last_name, age, blood_group, address, city, state, pin_code, latitude, longitude, donation_date, slot, booking_id, qr_binary):
     status = "Confirmed"
@@ -69,46 +69,85 @@ def load_booking(booking_id):
                 bookings.append(booking)
     return bookings
 
-def send_email_with_pdf(user_email, booking_id, booking_html):
-
-    base_url = "http://127.0.0.1:5000"
-    
-    booking_html = booking_html.replace("../static/", f"{base_url}/static/")
-    
-    path_to_wkhtmltopdf = r'wkhtmltopdf\bin\wkhtmltopdf.exe'
-    config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
-    
+def Create_PDF(booking_id, booking_data, timeout=120):
+    base_url = "http://127.0.0.1:8000"
     pdf_filename = f"static/Bookings/{booking_id}_booking.pdf"
-    options = {
-    'quiet': '',
-    'print-media-type': ''
-     }
+    os.makedirs(os.path.dirname(pdf_filename), exist_ok=True)
 
-    pdfkit.from_string(booking_html, pdf_filename, options=options, configuration=config)
+    booking_html = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Booking Confirmation</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+            }}
+            .booking-section {{
+                padding: 20px;
+                max-width: 800px;
+                margin: auto;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background: #f9f9f9;
+            }}
+            .booking-details-container {{
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+            }}
+            .qr-code img {{
+                max-width: 100%;
+                height: auto;
+                margin-right: 10px;
+            }}
+            .booking-info {{
+                flex: 1;
+                line-height: 1.5;
+            }}
+            .booking-info h2 {{
+                margin-top: 0;
+            }}
+        </style>
+    </head>
+    <body>
+        <main class="booking-section">
+            <div class="booking-details-container">
+                <div class="qr-code">
+                    <img src="data:image/png;base64,{booking_data['QR Code (Base64)']}" alt="QR Code" style="width: 270px; height: 270px;">
+                </div>
+                <div class="booking-info">
+                    <h2>Donor Booking Details</h2>
+                    <p><strong>Full Name:</strong> {booking_data['First Name']} {booking_data['Middle Name']} {booking_data['Last Name']}</p>
+                    <p><strong>Age:</strong> {booking_data['Age']}</p>
+                    <p><strong>Blood Group:</strong> {booking_data['Blood Group']}</p>
+                    <p><strong>Address:</strong> {booking_data['Address']}, {booking_data['City']}, {booking_data['State']} - {booking_data['Pin Code']}</p>
+                    <p><strong>Time Slot:</strong> {booking_data['Preferred Slot']}</p>
+                    <p><strong>Booking ID:</strong> {booking_data['Booking ID']}</p>
+                    <p><strong>Date:</strong> {booking_data['Donation Date']}</p>
+                    <p><strong>Status:</strong> {booking_data['Status']}</p>
+                </div>
+            </div>
+        </main>
+    </body>
+    </html>
+    """
 
-    sender_email = "adilaquil2005@gmail.com"
-    sender_password = "aako ufhq wfvr psiz"
-    receiver_email = user_email
+    path_to_wkhtmltopdf = '/usr/bin/wkhtmltopdf'
+    config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
 
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-    msg['Subject'] = 'Booking Confirmation - VitalisLink'
+    try:
+        pdfkit.from_string(booking_html, pdf_filename, configuration=config)
+        print(f"PDF generated: {pdf_filename}, Size: {os.path.getsize(pdf_filename)} bytes")
+    except subprocess.TimeoutExpired:
+        print(f"PDF generation timed out after {timeout} seconds.")
+        raise
 
-    body = "Please find your booking confirmation attached as a PDF."
-    msg.attach(MIMEText(body, 'plain'))
-
-    with open(pdf_filename, 'rb') as attachment:
-        part = MIMEBase('application', 'octet-stream')
-        part.set_payload(attachment.read())
-        encoders.encode_base64(part)
-        part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(pdf_filename)}')
-        msg.attach(part)
-
-    with smtplib.SMTP('smtp.gmail.com', 587) as server:
-        server.starttls()
-        server.login(sender_email, sender_password)
-        server.sendmail(sender_email, receiver_email, msg.as_string())
+    return pdf_filename
 
 def getbookings():
     Donors.new.clear()

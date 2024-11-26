@@ -1,12 +1,18 @@
 from flask import render_template, request, redirect, url_for, flash, session
 from User import load_users, save_user, hash_password, load_user_data, save_user_data
-from New_Donors import register_donor, load_bookings, save_donor, load_booking, send_email_with_pdf, getbookings
+from New_Donors import register_donor, load_bookings, save_donor, load_booking, Create_PDF, getbookings
 from Existing_Donors import Donors
 import hashlib
 import random
 import csv
 import os
 from werkzeug.utils import secure_filename
+import pdfkit
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'csv'}
@@ -17,6 +23,44 @@ if not os.path.exists(UPLOAD_FOLDER):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def send_email_with_pdf(PDF_Filename):
+    try:
+
+        recipient_email = session.get('email')
+        sender_email = os.getenv('SENDER_EMAIL')
+        sender_password = os.getenv('EMAIL_PASSWORD')
+
+        if not sender_email or not sender_password:
+            raise ValueError("Environment variables SENDER_EMAIL or EMAIL_PASSWORD are not set.")
+        if not recipient_email:
+            raise ValueError("Recipient email not found in session.")
+
+        subject = "Booking Confirmation - VitalisLink"
+        body = "Hi! Please find your booking confirmation attached as a PDF."
+        
+        os.makedirs(os.path.dirname(PDF_Filename), exist_ok=True)
+
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+
+        with open(PDF_Filename, 'rb') as attachment:
+            part = MIMEBase('application', 'pdf')
+            part.set_payload(attachment.read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(PDF_Filename)}')
+            msg.attach(part)
+
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, recipient_email, msg.as_string())
+
+        return f"Booking confirmation PDF sent successfully to {recipient_email}."
+    except Exception as e:
+        return f"Error: {e}"
 
 def register_routes(app):
 
@@ -143,9 +187,12 @@ def register_routes(app):
             return "Booking not found", 404
 
         try:
+            sender_email = os.getenv('SENDER_EMAIL')
+            sender_password = os.getenv('EMAIL_PASSWORD')
+            print(f"SENDER_EMAIL: {sender_email}, EMAIL_PASSWORD: {sender_password}")
             email = session.get('email')
-            booking_html = render_template('View_booking.html', booking=booking[0], username=session.get('username'))
-            send_email_with_pdf(email, booking_id, booking_html)
+            PDF_Filename = Create_PDF(booking_id, booking[0])
+            send_email_with_pdf(PDF_Filename)
             return "Email sent successfully", 200
         except Exception as e:
             print(f"Error sending email: {e}")
@@ -258,5 +305,21 @@ def register_routes(app):
                     os.remove(file_path)
         else:
             flash("Invalid file format. Please upload a CSV file.", "danger")
-        
+
         return redirect(url_for('dashboard'))
+    
+    # @app.route('/test_pdf')
+    # def test_pdf():
+    #     try:
+    #         path_to_wkhtmltopdf = '/usr/bin/wkhtmltopdf'
+    #         config = pdfkit.configuration(wkhtmltopdf=path_to_wkhtmltopdf)
+    #         test_html = "<html><body><h1>Test PDF</h1></body></html>"
+    #         pdf_filename = "test_output.pdf"
+    #         sender_email = os.getenv('SENDER_EMAIL')
+    #         sender_password = os.getenv('EMAIL_PASSWORD')
+    #         send_email_with_pdf1()
+    #         print(f"SENDER_EMAIL: {sender_email}, EMAIL_PASSWORD: {sender_password}")
+    #         pdfkit.from_string(test_html, pdf_filename, configuration=config)
+    #         return "PDF generated successfully."
+    #     except Exception as e:
+    #         return f"Error: {e}"
