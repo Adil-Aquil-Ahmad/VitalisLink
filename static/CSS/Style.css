@@ -126,6 +126,12 @@ footer {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1.1);
   animation: glow 1.5s infinite alternate;
+  top: 82%;
+  left: 14%;
+  width: 18%;
+  height: auto;
+  font-size: 1.5vw;
+  padding: 0.8em 1em;
 }
 
 .donate-btn.show2 {
@@ -139,6 +145,8 @@ footer {
   height: 10%;
   align-items: center;
   text-align: center;
+  font-size: 1.3vw;
+  padding: 0.8em 1em;
 }
 
 .donate-btn:hover {
@@ -158,4 +166,106 @@ footer {
                   0 0 40px rgba(220, 20, 60, 1);
   }
 
+}
+
+@media screen and (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 1.2em;
+  }
+
+  .menu {
+    flex-direction: column;
+    gap: 0.5em;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .menu li a {
+    font-size: 1em;
+    padding: 0.5em 0;
+    width: 100%;
+  }
+
+  .slideshow-container {
+    height: 50vw;
+  }
+
+  .nav {
+    top: 30vw;
+  }
+
+  .donate-btn.show {
+    top: 82%;
+    left: 14%;
+    width: 18%;
+    height: auto;
+    font-size: 2vw;
+    padding: 0.8em 1em;
+  }
+
+  .donate-btn.show2 {
+    top: 85%;
+    left: 50%;
+    width: 17%;
+    height: auto;
+    font-size: 2vw;
+    padding: 0.8em 1em;
+  }
+
+  footer {
+    font-size: 0.9em;
+    padding: 0.8em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  header {
+    padding: 1em 0.5em;
+  }
+
+  .title {
+    font-size: 1em;
+  }
+
+  .hamburger {
+    font-size: 1.5em;
+  }
+
+  .menu {
+    gap: 0.3em;
+  }
+
+  .menu li a {
+    font-size: 0.9em;
+    padding: 0.4em 0;
+  }
+
+  .slideshow-container {
+    height: 60vw;
+  }
+
+  .nav {
+    top: 35vw;
+  }
+
+  .donate-btn.show2 {
+    top: 85%;
+    left: 50%;
+    width: 17%;
+    height: auto;
+    font-size: 2vw;
+    padding: 0.7em 0.9em;
+  }
+
+  footer {
+    font-size: 0.8em;
+    padding: 0.5em;
+  }
 }

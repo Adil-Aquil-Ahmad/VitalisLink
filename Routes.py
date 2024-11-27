@@ -88,6 +88,9 @@ def register_routes(app):
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
+        if 'username' in session:
+            flash("You are already signed in.", "danger")
+            return redirect(url_for('my_profile'))
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']

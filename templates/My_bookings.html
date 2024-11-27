@@ -9,9 +9,9 @@
 </head>
 <body>
     <header>
-        <img src="../static/Images/VITALISLINK LOGO LIGHT2.png" alt="" style="opacity: 100%; border-radius: 5px;">
-        <h1>My Bookings</h1>
-        <nav>
+        <img src="../static/Images/VITALISLINK LOGO LIGHT2.png" alt="VitalisLink Logo" style="opacity: 100%; border-radius: 5px;">
+        <button class="hamburger" onclick="toggleMenu()">&#9776;</button>
+        <nav id="navMenu">
             <ul class="menu">
                 <li><a href="/">Home</a></li>
                 <li>
@@ -22,31 +22,28 @@
                     {% endif %}
                 </li>
                 <li><a href="/dashboard">Dashboard</a></li>
+                {% if username == "admin" %}
                 <li>
-                    {% if username=="admin" %}
                     <a href="/admin_dashboard">Admin Dashboard</a>
-                    {% endif %}
                 </li>
+                {% endif %}
                 <li><a href="/about">About</a></li>
                 <li>
                     {% if username %}
-                        <div class="dropdown">
-                            <button onclick="myFunction()" class="dropbtn">{{username[0]}}</button>
-                            <div id="myDropdown" class="dropdown-content">
-                                <div id="welcome">
-                                    <p>Welcome, {{username}}</p>
-                                </div>
-                                <a href="/myprofile">My Profile</a>
-                                <a href="/my_bookings">My Bookings</a>
-                                <a href="/logout">Logout</a>
-                            </div>
-                          </div>
+                        <button onclick="toggleDropdown()" class="dropbtn">{{username[0]}}</button>
+                        <div id="dropdownContent" class="dropdown-content">
+                            <br>
+                            <a href="/myprofile">Welcome, {{username}}</a>
+                            <a href="/myprofile">My Profile</a>
+                            <a href="/my_bookings">My Bookings</a>
+                            <a href="/logout">Logout</a>
+                        </div>
                     {% else %}
-                    <a href="/login">Login</a>
+                        <a href="/login">Login</a>
                     {% endif %}
-            </li>   
-            </ul>        
-        </nav>
+                </li>
+            </ul>
+        </nav>        
     </header>
         
     <main class="bookings-section">

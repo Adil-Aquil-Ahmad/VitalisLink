@@ -245,3 +245,45 @@ button.edit-btn, button.save-btn {
 button.edit-btn:hover, button.save-btn:hover {
     background-color: #dc143c;
 }
+
+@media (max-width: 768px) {
+
+  .profile-register-section {
+      padding: 1em;
+      margin-top: 25vw;
+  }
+
+  .profile-login-form {
+      width: 90%;
+      padding: 1.5em;
+  }
+
+  .inline-group {
+      flex-direction: column;
+  }
+
+  .inline-group div {
+      margin-bottom: 1em;
+  }
+
+  button.edit-btn, button.save-btn {
+      width: 100%;
+      font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .profile-login-form h2 {
+      font-size: 1.2em;
+  }
+
+  .input-group input, .input-group select {
+      font-size: 0.9em;
+  }
+
+  button.edit-btn, button.save-btn {
+      font-size: 0.9em;
+      padding: 0.8em;
+  }
+}

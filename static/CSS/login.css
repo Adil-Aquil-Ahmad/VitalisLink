@@ -50,8 +50,10 @@
   .login-section {
     display: flex;
     justify-content: center;
+    justify-self: center;
     align-items: center;
-    height: 80vh;
+    width: 150em;
+    margin-top: 2vw;
   }
   
   .login-form {
@@ -203,4 +205,116 @@
   color: #4b0082;
   background-color: #f5e6ff;
   border: 1px solid #4b0082;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-size: cover;
+  }
+
+  .login-section {
+    width: 100vw;
+    padding: 2em 1em;
+  }
+
+  .login-form {
+    width: 80%;
+    padding: 1.5em;
+  }
+
+  .login-form h2 {
+    font-size: 1.4em;
+  }
+
+  .input-group label {
+    font-size: 1em;
+  }
+
+  .input-group input {
+    padding: 0.7em;
+    font-size: 0.9em;
+  }
+
+  button[type="submit"] {
+    padding: 0.9em;
+    font-size: 1em;
+  }
+
+  .more {
+    font-size: 0.9em;
+  }
+
+  .icon a {
+    font-size: 1.3em;
+  }
+
+  .signup-btn, .signin-btn {
+    padding: 0.8em;
+    font-size: 1em;
+  }
+
+  .flash-messages {
+    padding: 0.8em;
+  }
+
+  .input-group select {
+    font-size: 0.9em;
+    padding: 0.7em;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    background-size: cover;
+  }
+
+  .login-section {
+    width: 100vw;
+    padding: 2em 1em;
+  }
+
+  .login-form {
+    width: 90%;
+    padding: 1.2em;
+  }
+
+  .login-form h2 {
+    font-size: 1.3em;
+  }
+
+  .input-group label {
+    font-size: 1em;
+  }
+
+  .input-group input {
+    padding: 0.6em;
+    font-size: 0.9em;
+  }
+
+  button[type="submit"] {
+    padding: 0.8em;
+    font-size: 1em;
+  }
+
+  .more {
+    font-size: 0.8em;
+  }
+
+  .icon a {
+    font-size: 1.2em;
+  }
+
+  .signup-btn, .signin-btn {
+    padding: 0.7em;
+    font-size: 0.9em;
+  }
+
+  .flash-messages {
+    padding: 0.7em;
+  }
+
+  .input-group select {
+    padding: 0.6em;
+    font-size: 0.8em;
+  }
 }

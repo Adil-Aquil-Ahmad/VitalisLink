@@ -227,3 +227,77 @@ button[type="submit"]:hover {
   outline: none;
   border-color: #951a1a;
 }
+
+@media (max-width: 1024px) {
+  .Donor-register-section {
+    height: auto;
+    padding: 2em 0;
+  }
+
+  .Donor-login-form {
+    width: 80%;
+  }
+
+  .input-group.inline-group {
+    flex-direction: column;
+    gap: 1.5em;
+  }
+
+  .input-group.inline-group div {
+    width: 100%;
+  }
+
+  button[type="submit"] {
+    font-size: 1em;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .Donor-login-form {
+    width: 95%;
+    padding: 1.5em;
+  }
+
+  .input-group label {
+    font-size: 0.9em;
+  }
+
+  .input-group input,
+  .input-group select {
+    font-size: 0.9em;
+    padding: 0.7em;
+  }
+
+  .signup-btn, .signin-btn {
+    font-size: 0.9em;
+    padding: 0.5em 1em;
+  }
+
+  button[type="submit"] {
+    font-size: 0.9em;
+    padding: 0.8em;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .Donor-login-form {
+    padding: 1em;
+  }
+
+  .input-group label {
+    font-size: 0.8em;
+  }
+
+  .input-group input,
+  .input-group select {
+    font-size: 0.8em;
+    padding: 0.6em;
+  }
+
+  button[type="submit"] {
+    font-size: 0.8em;
+    padding: 0.6em;
+  }
+}
